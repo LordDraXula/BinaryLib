@@ -1,0 +1,39 @@
+cmake_minimum_required (VERSION 3.14)
+
+set(CMAKE_PREFIX_PATH "${CMAKE_SOURCE_DIR}")
+
+project (BinaryLib
+	VERSION 1.0)
+
+set(CMAKE_CXX_STANDARD 20)
+set(CMAKE_CXX_STANDARD_REQUIRED ON)
+set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -std=c++2a")
+
+IF(CMAKE_INSTALL_PREFIX_INITIALIZED_TO_DEFAULT)
+  SET(CMAKE_INSTALL_PREFIX ${CMAKE_CURRENT_SOURCE_DIR}/install CACHE PATH "" FORCE)
+ENDIF(CMAKE_INSTALL_PREFIX_INITIALIZED_TO_DEFAULT)
+
+set(CMAKE_BUILD_TYPE Debug CACHE STRING "")
+set(CMAKE_WINDOWS_EXPORT_ALL_SYMBOLS 1)
+
+set(CMAKE_CXX_EXTENSIONS OFF)
+
+set(BinaryLib_TESTS FALSE CACHE BOOL "")
+
+set_property(GLOBAL PROPERTY USE_FOLDERS ON)
+
+add_library(includes_lib INTERFACE)
+target_include_directories(includes_lib INTERFACE ${CMAKE_CURRENT_SOURCE_DIR}/include)
+
+set(CMAKE_RUNTIME_OUTPUT_DIRECTORY ${CMAKE_BINARY_DIR})
+
+add_subdirectory(src)
+
+IF(BinaryLib_TESTS)
+    add_subdirectory(test)
+ENDIF(BinaryLib_TESTS)
+
+install(TARGETS BinaryLib # dynBinLib constBinLib
+        RUNTIME DESTINATION bin
+        ARCHIVE DESTINATION bin
+        )
